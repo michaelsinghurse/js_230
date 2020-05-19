@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en-US">
+  <head>
+    <title>On the River</title>
+    <script>
+      function walk(node, callback) {
+        callback(node);
+
+        for (let index = 0; index < node.childNodes.length; index += 1) {
+          walk(node.childNodes[index], callback);
+        }
+      }
+
+
+      window.addEventListener("load", () => {
+        let pElements = document.querySelectorAll(".intro p");
+        for (let index = 0; index < pElements.length; index += 1) {
+          pElements[index].classList.add("article-foo");
+        }
+      });
+    </script>
+  </head>
+  <body>
+    <div id="page1">
+      <div class="intro">
+        <p>The sun is low,</p>
+      </div>
+      <p>The waters flow,</p>
+    </div>
+    <div id="page2">
+      <div class="intro">
+        <p>My boat is dancing to and fro.</p>
+      </div>
+      <p>The eve is still,</p>
+    </div>
+    <div id="page3">
+      <div class="intro">
+        <p>Yet from the hill</p>
+      </div>
+      <p>The killdeer echoes loud and shrill.</p>
+    </div>
+  </body>
+</html>
