@@ -1,0 +1,47 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Node Swap</title>
+    <script>
+
+      function areDescendants(first, second) {
+        return first.contains(second) || second.contains(first);
+      }
+
+      function nodeSwap(id1, id2) {
+        let el1 = document.getElementById(id1);
+        let el2 = document.getElementById(id2);
+        if (!el1 || !el2 || areDescendants(el1, el2)) return undefined;
+        
+        let el1Clone = el1.cloneNode(true);
+        let el2Clone = el2.cloneNode(true);
+
+        el1.insertAdjacentElement("afterend", el2Clone);
+        el2.insertAdjacentElement("afterend", el1Clone);
+
+        el1.remove();
+        el2.remove();
+      }
+
+      window.onload = () => {
+        nodeSwap(4, 5);
+      };
+
+
+    </script>
+  </head>
+  <body>
+    <div id="1">1
+      <div id="4">4</div>
+      <div id="5">5
+        <div id="6">6</div>
+      </div>
+    </div>
+    <div id="2">2</div>
+    <div id="3">3
+      <div id="7">7</div>
+      <div id="8">8</div>
+      <div id="9">9</div>
+    </div>
+  </body>
+</html>
