@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en-US">
+<head>
+  <meta charset="UTF-8" />
+  <title>Array to Nodes</title>
+  <script>
+    function arrayToNodes(nodeArray) {
+      if (!parentElement) {
+        parentElement = document.getElementsByTagName("HTML")[0];
+      }
+
+      let element = document.createElement(nodeArray[0]);
+      parentElement.appendChild(element);
+
+      nodeArray[1].forEach(subArray => arrayToNodes(subArray, element));
+    }
+
+    window.onload = () => {
+      //let nodes = ["BODY",[["HEADER",[]],["MAIN",[]],["FOOTER",[]]]];
+      let nodes = ["BODY",[["DIV",[["DIV",[]],["DIV",[["DIV",[]]]]]],
+        ["DIV",[]],["DIV",[["DIV",[]],["DIV",[]],["DIV",[]]]]]];
+      arrayToNodes(nodes);
+    };
+  </script>
+</head>
+
+</html>
