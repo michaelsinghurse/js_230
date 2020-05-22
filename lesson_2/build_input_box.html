@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en-US">
+<head>
+  <meta charset="UTF-8" />
+  <title>DIY Input Box</title>
+  <style>
+    .text-field {
+      border: solid 1px #ccc;
+      padding: 1em;
+      cursor: pointer;
+      font-family: sans-serif;
+      font-size: 18px;
+      overflow: hidden;
+      width: 300px; 
+    }
+
+    .text-field .content {
+      display: inline-block;
+      height: 21px;
+      float: left;
+      white-space: pre;
+    }
+
+    .text-field.focused {
+      border-color: black;
+    }
+
+    .text-field.cursor .content {
+      border-right: solid 2px black;
+    }
+  </style>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      let textField = document.querySelector(".text-field");
+      let intervalId;
+
+      textField.addEventListener("click", function(event) {
+        event.stopPropagation(); 
+        this.classList.add("focused");
+        
+        if (!intervalId) {
+          intervalId = setInterval(() => {
+            this.classList.toggle("cursor");
+          }, 0.5 * 1000);
+        }
+      });
+
+      document.addEventListener("click", function(event) {
+        textField.classList.remove("focused");
+        clearInterval(intervalId);
+        textField.classList.remove("cursor");
+      });
+
+      document.addEventListener("keyup", function(event) {
+        if (textField.classList.contains("focused")) {
+          let key = event.key;
+          let content = document.querySelector(".content");
+
+          if (key === "Backspace") {
+            content.textContent = content.textContent.slice(0, -1); 
+          } else {
+            content.textContent += key; 
+          }
+        }
+      });
+    });
+
+  </script>
+</head>
+<body>
+  <div class="text-field">
+    <div class="content"></div>
+  </div>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
