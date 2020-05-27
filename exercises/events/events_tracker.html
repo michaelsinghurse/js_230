@@ -1,0 +1,117 @@
+<html>
+  <head>
+    <title>Tests</title>
+    <meta charset="utf-8">
+    <style>
+     #red, #blue, #green, #orange {
+         cursor: pointer;
+         color: white;
+         padding: 10px;
+         margin: 10px;
+     }
+     #red {
+         width: 400px;
+         height: 400px;
+         background: red;
+     }
+
+     #blue {
+         width: 200px;
+         height: 200px;
+         background: blue;
+     }
+
+     #orange {
+         width: 100px;
+         height: 100px;
+         background: orange;
+     }
+
+     #green {
+         width: 50px;
+         height: 50px;
+         background: green;
+     }
+    </style>
+    <script>
+      let tracker = (function() {
+        let events = [];
+
+        return {
+          add: function(event) {
+            events.push(event);
+          },
+
+          list: function() {
+            return events.slice(); 
+            // or JSON.parse(JSON.stringify(events));
+          },
+
+          clear: function() {
+            events = [];
+            return events.length;
+          },
+
+          elements: function() {
+            return events.map(evt => evt.target); 
+          },
+        };
+      })();
+
+      function track(callback) {
+        function isEventTracked(events, event) {
+          return events.indexOf(event) !== -1;
+        }
+
+        return function(event) {
+          if (!isEventTracked(tracker.list(), event)) {
+            tracker.add(event);
+          }
+
+          callback(event);
+        };
+      }
+
+      document.addEventListener("DOMContentLoaded", _unusedEvent => {
+        let divRed = document.getElementById("red");
+        let divBlue = document.getElementById("blue");
+        let divOrange = document.getElementById("orange");
+        let divGreen = document.getElementById("green");
+
+        divRed.addEventListener('click', track(function(event) {
+          document.body.style.background = 'red';
+        }));
+
+        divBlue.addEventListener('click', track(function(event) {
+          event.stopPropagation();
+          document.body.style.background = 'blue';
+        }));
+
+        divOrange.addEventListener('click', track(function(event) {
+          document.body.style.background = 'orange';
+        }));
+
+        divGreen.addEventListener('click', track(function(event) {
+          document.body.style.background = 'green';
+
+          console.log(tracker.list().length);
+          console.log(tracker.elements());
+          console.log(tracker.elements()[0] === divBlue);
+          console.log(tracker.elements()[3] === divGreen);
+          console.log(tracker.clear());
+          console.log(tracker.list());
+          tracker.list()[0] = "abc";
+          console.log(tracker.list().length);
+        }));
+      });
+    </script>
+  </head>
+  <body>
+    <div id="red">Red
+      <div id="blue">Blue</div>
+      <div id="orange">Orange
+        <div id="green">Green</div>
+      </div>
+    </div>
+  </body>
+</html>
