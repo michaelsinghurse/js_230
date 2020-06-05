@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en-US">
+<head>
+  <meta charset="UTF-8" />
+  <title>Accordion</title>
+  <style>
+    main {
+      width: 600px;
+      margin: 0 auto;
+    }
+
+    form {
+      border: 1px solid black;
+      background: yellow;
+    }
+    
+    fieldset {
+      border: none;
+    }
+
+    [type="text"] {
+      width: 20px;
+    }
+    
+  </style>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+  <main>
+    <form action="#" method="get">
+      <fieldset>
+        <legend>Key Selector</legend>
+        <label for="key">Enter a key:</label>
+        <input name="key" id="key" type="text" required maxlength=1 />
+        <input type="submit" value="Submit" />
+      </fieldset>
+    </form>
+    <a href="#">Toggle</a>
+    <div id="accordion">
+      <p>Start by adding a submit event to the form. Within the callback, read in the character that was entered in to the text input. Once you have the character stored in a variable, you can bind the keypress event to the document. We bind it to the document to make sure that we obtain the keypress event no matter where the user's focus is within the page. The document object is not actually an HTML element, so we don't use a selector like "body" or "form" to locate it. Instead, we use the document variable that is already present in JavaScript. Here is an example of how we would bind our keypress event.</p>
+    </div>
+  </main>
+  <script>
+    $(function() {
+      let toggleKey = "";
+      
+      $("form").submit(function(event) {
+        event.preventDefault();
+        let $input = $("[name='key']");
+        toggleKey = $input.val();
+        $input.val("");
+      });
+
+      $("a").click(function(event) {
+        event.preventDefault();
+        $("#accordion").slideToggle(600); 
+      });
+
+      $(document).keyup(function(event) {
+        if (event.key === toggleKey) {
+          $("a").trigger("click"); 
+        }
+      });
+    });
+  </script>
+</body>
+</html>
