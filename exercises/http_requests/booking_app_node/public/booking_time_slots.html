@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en-US">
+<head>
+  <meta charset="UTF-8" />
+  <title>Booking Time Slots</title>
+  <style>
+    label {
+      display: block;
+      padding: 15px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Schedules</h1>
+  <div id="formsContainer">
+    <form id="addScheduleForm" method="" action="">
+      <label>
+        Please select one schedule
+        <select name="schedules" id="scheduleSelect" required></select>
+      </label>
+      <label>
+        Email:
+        <input type="email" name="student_email" id="studentEmail" required />
+      </label>
+      <input type="submit" value="Submit" />
+    </form>
+  </div>
+  <script src="./booking_time_slots.js"></script>
+</body>
+</html>

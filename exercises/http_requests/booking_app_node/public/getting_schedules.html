@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en-US">
+<head>
+  <meta charset="UTF-8" />
+  <title>Exercises</title>
+  <script>
+    const API_URL = "http://localhost:3000/api";
+
+    function alertUserAboutSchedules(data) {
+      if (data.length === 0) {
+        alert("There are no schedules available for viewing...");
+        return;
+      }
+
+      let staffSchedules = {};
+      
+      data.forEach(schedule => {
+        let key = `staff ${schedule["staff_id"]}`;
+
+        if (staffSchedules[key]) {
+          staffSchedules[key] += 1;
+        } else {
+          staffSchedules[key] = 1;
+        }
+      });
+
+      let messages = Object.keys(staffSchedules).reduce((accum, key) => {
+        accum.push(`${key}: ${staffSchedules[key]}`); 
+        return accum;
+      }, []);
+
+      alert(messages.join("\n"));
+    }
+
+    function getSchedules() {
+      let request = new XMLHttpRequest();
+      let schedulesUrl = API_URL + "/schedules";
+
+      request.open("GET", schedulesUrl);
+      request.timeout = 5 * 1000; 
+      request.responseType = "json";
+
+      request.addEventListener("load", function(event) {
+        let data = request.response;
+        alertUserAboutSchedules(data);
+      });
+
+      request.addEventListener("timeout", _unusedEvent => {
+        alert("This is taking longer than usual. Please try again later.");
+      });
+
+      request.addEventListener("loadend", _unusedEvent => {
+        alert("The request has finished loading.");
+      });
+
+      request.send();
+    }
+
+    document.addEventListener("DOMContentLoaded", _unusedEvent => {
+      getSchedules();  
+    });
+
+  </script>
+</head>
+<body>
+  <p>Exercises</p>
+</body>
+</html>

@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en-US">
+<head>
+  <meta charset="UTF-8" />
+  <title>Adding Schedules</title>
+  <style>
+    #schedules {
+      list-style-type: none;
+      padding-left: 0;
+    }
+
+    label {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+
+  <form method="POST" action="/api/schedules">
+    <button type="button" id="add_schedule" name="add_schedule">Add more schedules</button>
+    <ul id="schedules"></ul>
+    <input type="submit" value="Submit" />
+  </form>
+
+  <script>
+    let schedulesCount = 0;
+    let staffMembers;
+
+    function getStaffMembers() {
+      return new Promise((resolve, reject) => {
+        let request = new XMLHttpRequest();
+        request.open("GET", "http://localhost:3000/api/staff_members");
+        request.responseType = "json";
+
+        request.addEventListener("load", _event => {
+          staffMembers = request.response;
+          resolve();
+        });
+
+        request.send();
+      });
+    }
+
+    function getStaffOptionsHtml() {
+      let html = "";
+      staffMembers.forEach(staff => {
+        html += `<option value=${staff.id}>${staff.name}</option>`; 
+      });
+      return html;
+    }
+
+    function addScheduleToForm() {
+      schedulesCount += 1;
+      
+      let listItem = document.createElement("li");
+      listItem.innerHTML = 
+        `<fieldset>
+          <legend>Schedule ${schedulesCount}</legend>
+          <label>
+            Staff Name :
+            <select name="staff_${schedulesCount}" id="staff_${schedulesCount}">
+            ${getStaffOptionsHtml()}
+            </select>
+          </label>
+          <label>
+            Date :
+            <input type="text" placeholder="mm-dd-yy" id="date_${schedulesCount}" />
+          </label>
+          <label>
+            Time :
+            <input type="text" placeholder="hh:mm" id="time_${schedulesCount}" />
+          <label>
+        </fieldset>`;
+      
+      document.getElementById("schedules").appendChild(listItem);
+    }
+    
+    function resetForm() {
+      getStaffMembers()
+      .then(() => {
+        document.querySelector("ul#schedules").innerHTML = "";
+        schedulesCount = 0;
+        addScheduleToForm();
+      });  
+    }
+    
+    function alertInvalidInputs() {
+      alert("Please check your inputs");
+    }
+
+    document.addEventListener("DOMContentLoaded", function(event) {
+      resetForm();
+      
+      let addScheduleButton = document.querySelector("button#add_schedule");
+      addScheduleButton.addEventListener("click", _event => {
+        addScheduleToForm();
+      });
+
+      let form = document.querySelector("form");
+      form.addEventListener("submit", event => {
+        event.preventDefault();
+        
+        let schedules = [];
+        
+        for (let index = 1; index <= schedulesCount; index += 1) {
+          let obj = {};
+          let select = document.querySelector(`#staff_${index}`);
+          let id = select.options[select.selectedIndex].value;
+          let dateValue = document.querySelector(`#date_${index}`).value;
+          let timeValue = document.querySelector(`#time_${index}`).value;
+
+          if (!dateValue || !timeValue) {
+            alertInvalidInputs();
+            return;
+          }
+
+          obj["staff_id"] = Number(id);
+          obj["date"] = dateValue;
+          obj["time"] = timeValue;
+          
+          schedules.push(obj);
+        }
+
+        let json = JSON.stringify({ "schedules": schedules });
+
+        let request = new XMLHttpRequest();
+
+        request.open("POST", form.action);
+        request.setRequestHeader("Content-Type", "application/json");
+
+        request.addEventListener("load", event => {
+          switch (request.status) {
+            case 201:
+              alert(request.response);
+              resetForm();
+              break;
+            case 400:
+              alert(request.response);
+              break;
+          }
+        });
+
+        request.send(json);
+      });
+
+    });
+
+  </script>
+</body>
+</html>
+
+
+

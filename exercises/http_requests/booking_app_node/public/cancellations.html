@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en-US">
+<head>
+  <meta charset="UTF-8" />
+  <title>Cancellations</title>
+  <script>
+    function httpRequest(method, url) {
+      return new Promise((resolve, reject) => {
+        let xhr = new XMLHttpRequest();
+
+        xhr.addEventListener("load", () => resolve(xhr));
+        xhr.addEventListener("error", reject);
+        
+        xhr.open(method, url);
+        xhr.send();
+      });
+    }
+
+    function cancelSchedule(scheduleId) {
+      let url = "http://localhost:3000/api/schedules/" + scheduleId;
+
+      httpRequest("DELETE", url)
+      .then(request => {
+        if (request.status === 204) {
+          console.log(`Schedule ${scheduleId} deleted.`);
+        } else { 
+          console.log(`Schedule ${scheduleId} not deleted. ${request.response}`);
+        }
+      })
+      .catch(() => console.log("Error making request. Please try again."));
+    }
+
+    function cancelBooking(bookingId) {
+      let url = "http://localhost:3000/api/bookings/" + bookingId;
+
+      httpRequest("PUT", url)
+      .then(request => {
+        if (request.status === 204) {
+          console.log(`Booking ${bookingId} deleted.`);
+        } else {
+          console.log(`Booking ${bookingId} not deleted. ${request.response}`);
+        }
+      })
+      .catch(() => console.log("Error making request. Please try again."));
+
+    }
+
+    cancelSchedule(1);
+    cancelBooking(1);
+  </script>
+</head>
+<body>
+  <h1>Cancellations</h1>
+  <p>See the Developer's console for output.</p>
+</body>
+</html>
