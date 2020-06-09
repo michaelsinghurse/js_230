@@ -4,7 +4,6 @@ $(function() {
   let FADE_DURATION = 600;
 
   $("#team li > a").click(function(event) {
-    console.log("anchor click");
     event.preventDefault();
 
     let $overlay = $(event.target).closest("a").siblings(".overlay");
@@ -15,14 +14,11 @@ $(function() {
   });
   
   $overlays.click(function(event) {
-    console.log("overlay click...");
     $(this).fadeToggle(FADE_DURATION);
     $(this).children(".modal").fadeToggle(FADE_DURATION);
   });
 
   $modals.click(function(event) {
-    console.log("modal click...");
-
     event.stopPropagation();
     let $modal = $(this);
     if (event.target === $modal.children("a").get(0)) {

@@ -156,13 +156,7 @@ footer li a.instagram { background-position: 0 -138px; }
   margin: 0 0 20px 0;
 }
 
-/* End Team Modal and Overlays */
-
-/*
-#team .hidden {
-  display: none;
-}
-*/
+/* Team Modal and Overlays */
 
 #team .overlay {
   display: none;
@@ -221,10 +215,6 @@ footer li a.instagram { background-position: 0 -138px; }
   font-size: 20px;
 }
 
-
-
-
-
 /* End Team Modal and Overlays */
 
 @media (max-width: 875px) {
@@ -272,6 +262,13 @@ footer li a.instagram { background-position: 0 -138px; }
 
   #projects article p {
     padding: 0 30px;
+  }
+  
+  #team .modal {
+    left: 0;
+    margin: 0;
+    width: 100%;
+    padding: 75px 50px;
   }
 }
 
