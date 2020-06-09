@@ -28,10 +28,38 @@ img {
 figure {
   padding: 0 0 30px 0;
   margin: 0;
+  position: relative;
 }
 
 figure img {
   border: 15px solid #ffffff;
+}
+
+figure img:nth-child(n + 2) {
+  display: none;
+}
+
+#right_arrow, #left_arrow {
+  position: absolute;
+  top: 44%;
+  color: black;
+  font-size: 48px;
+  background-color: rgba(255, 215, 0, 0.35);
+  padding: 0 18px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+#right_arrow:hover, #left_arrow:hover {
+  background-color: rgba(255, 215, 0);
+}
+
+#right_arrow {
+  right: 15px;
+}
+
+#left_arrow {
+  left: 15px;
 }
 
 figcaption {
@@ -57,4 +85,9 @@ li {
 
 li img {
   border: 3px solid #ffffff;
+  cursor: pointer;
+}
+
+.selected {
+  border: 5px solid gold;
 }
