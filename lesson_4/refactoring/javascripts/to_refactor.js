@@ -1,42 +1,26 @@
 $(function() {
   $("nav a").on("mouseenter", function() {
-    $(this).next("ul").css({
-      display: "block"
-    });
+    $(this).next("ul").addClass("visible");
   });
 
   $("nav").on("mouseleave", function() {
-    $(this).find("ul ul").css({
-      display: "none"
-    });
+    $(this).find("ul ul").removeClass("visible");
   });
 
-  $(".button").on("click", function(e) {
+  $(".button, button").on("click", function(e) {
     e.preventDefault();
 
-    $(this).addClass("clicked");
-  });
-
-  $("button").on("click", function() {
     $(this).addClass("clicked");
   });
 
   $(".toggle").on("click", function(e) {
     e.preventDefault();
-
-    if ($(this).next(".accordion").hasClass("opened")) {
-      $(this).next(".accordion").removeClass("opened");
-    }
-    else {
-      $(this).next(".accordion").addClass("opened");
-    }
+    $(this).next(".accordion").toggleClass("opened");
   });
-
-  $("form").on("submit", function(e) {
-    e.preventDefault();
-    var cc_number = $(this).find("[type=text]").val(),
-        odd_total = 0,
-        even_total = 0;
+  
+  function sumOfEvenAndOddDigits(cc_number) {
+    let odd_total = 0;
+    let even_total = 0;
 
     cc_number = cc_number.split("").reverse();
     for (var i = 0, len = cc_number.length; i < len; i++) {
@@ -54,59 +38,50 @@ $(function() {
         even_total += +cc_number[i];
       }
     }
-    if ((odd_total + even_total) % 10 == 0) {
-      $(this).find(".success").show();
-      $(this).find(".error").hide();
+
+    return { odd_total, even_total };
+  }
+  
+
+  $("form").on("submit", function(e) {
+    e.preventDefault();
+
+    let cc_number = $(this).find("[type=text]").val();
+    let isValidNum;
+
+    if (cc_number === "" || Number.isNaN(Number(cc_number))) {
+      isValidNum = false;
+    } else {
+      let { odd_total, even_total } = sumOfEvenAndOddDigits(cc_number);
+      
+      isValidNum = (odd_total + even_total) % 10 === 0;
     }
-    else {
-      $(this).find(".error").show();
-      $(this).find(".success").hide();
-    }
+
+    $(this).find(".success").toggle(isValidNum);
+    $(this).find(".error").toggle(!isValidNum);
   });
 
   $("ul a").on("click", function(e) {
     e.preventDefault();
 
-    var month = $(this).text(),
-        $stone = $("#birthstone");
+    let month = $(this).text();
+    let $stone = $("#birthstone");
+  
+    const MONTH_TO_STONE = { 
+      January: "garnet",
+      February: "amethyst",
+      March: "bloodstone",
+      April: "diamond",
+      May: "emerald",
+      June: "pearl, moonstone, or alexandrite",
+      July: "ruby",
+      August: "peridot",
+      September: "sapphire",
+      October: "opal or tourmaline",
+      November: "topaz or citrine",
+      December: "turquoise, zircon, or tanzanite",
+    };
 
-    switch (month) {
-      case "January":
-        $stone.text("Your birthstone is garnet");
-        break;
-      case "February":
-        $stone.text("Your birthstone is amethyst");
-        break;
-      case "March":
-        $stone.text("Your birthstone is aquamarine or bloodstone");
-        break;
-      case "April":
-        $stone.text("Your birthstone is diamond");
-        break;
-      case "May":
-        $stone.text("Your birthstone is emerald");
-        break;
-      case "June":
-        $stone.text("Your birthstone is pearl, moonstone, or alexandrite");
-        break;
-      case "July":
-        $stone.text("Your birthstone is ruby");
-        break;
-      case "August":
-        $stone.text("Your birthstone is peridot");
-        break;
-      case "September":
-        $stone.text("Your birthstone is sapphire");
-        break;
-      case "October":
-        $stone.text("Your birthstone is opal or tourmaline");
-        break;
-      case "November":
-        $stone.text("Your birthstone is topaz or citrine");
-        break;
-      case "December":
-        $stone.text("Your birthstone is turquoise, zircon, or tanzanite");
-        break;
-    }
+    $stone.text(`Your birthstone is ${MONTH_TO_STONE[month]}`);
   });
 });

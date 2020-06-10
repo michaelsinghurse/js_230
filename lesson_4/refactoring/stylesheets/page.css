@@ -62,6 +62,7 @@ input[type="text"] {
 }
 
 nav ul ul { display: none; }
+nav ul ul.visible { display: block; }
 
 form p {
   display: none;
