@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en-US">
+<head>
+  <meta charset="UTF-8" />
+  <title>Dynamic Animations</title>
+  <link rel="stylesheet" href="./style.css" />
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+  <main>
+    <div id="canvas"></div>
+    <button type="button" id="start">Start</button>
+    <button type="button" id="stop">Stop</button>
+    <form>
+      <h1>Add a shape</h1>
+      <fieldset>
+        <legend>Type</legend>
+        <ul>
+          <li>
+            <input type="radio" id="square" name="shape" value="square" checked />
+            <label for="square">Square</label>
+          </li>
+          <li>
+            <input type="radio" id="circle" name="shape" value="circle" />
+            <label for="circle">Circle</label>
+          </li>
+          <li>
+            <input type="radio" id="triangle" name="shape" value="triangle" />
+            <label for="triangle">Triangle</label>
+          </li>
+        </ul>
+      </fieldset>
+      <fieldset>
+        <legend>Starting Point</legend>
+        <input type="text" name="start-x" placeholder="x:" required />
+        <input type="text" name="start-y" placeholder="y:" required />
+      </fieldset>
+      <fieldset>
+        <legend>Ending Point</legend>
+        <input type="text" name="end-x" placeholder="x:" required />
+        <input type="text" name="end-y" placeholder="y:" required />
+      </fieldset>
+      <input type="submit" value="Add" />
+    </form>
+  </main>
+  <script src="./application.js"></script>
+</body>
+</html>
