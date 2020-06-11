@@ -1,0 +1,74 @@
+*, body {
+  padding: 0;
+  margin: 0;
+}
+
+body {
+  background-color: #CEB888;
+  font-family: sans-serif;
+  padding-top: 10px;
+}
+
+main {
+  width: 800px;
+  margin: 0 auto;
+  background-color: white;
+  overflow: hidden;
+  padding: 10px;
+}
+
+form, section {
+  float: left;
+}
+
+form {
+  width: 200px;
+  padding: 0 10px; 
+}
+
+form fieldset {
+  border: none;
+}
+
+form ul {
+  list-style-type: none;
+}
+
+form li {
+  padding: 5px 0;
+}
+
+form label {
+  margin-left: 10px;
+}
+
+form input, form label {
+  cursor: pointer;
+}
+
+section {
+  float: none;
+  overflow: hidden; 
+}
+
+section h1 {
+  margin-bottom: 15px;
+}
+
+section ul {
+  list-style-type: none;
+}
+
+section li {
+  border-bottom: 1px solid silver;
+  padding: 10px;
+}
+
+section li:hover {
+  background-color: silver;
+}
+
+section li:last-child {
+  border-bottom: none;
+}
+
