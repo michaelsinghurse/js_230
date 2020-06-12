@@ -1,4 +1,5 @@
 $(function() {
+  const ANIMATE_DURATION = 1000;
   const SHAPE_SIZE = 50;
   const MAX_Y = $("#canvas").height() - SHAPE_SIZE;
   const MAX_X = $("#canvas").width() - SHAPE_SIZE;
@@ -21,10 +22,8 @@ $(function() {
     };
 
     if (
-      isInvalid(startX, MAX_X)  ||
-      isInvalid(startY, MAX_Y) ||
-      isInvalid(endX, MAX_X)    ||
-      isInvalid(endY, MAX_Y)
+      isInvalid(startX, MAX_X) || isInvalid(startY, MAX_Y)  ||
+      isInvalid(endX, MAX_X)   || isInvalid(endY, MAX_Y)
     ) {
       return false
     }
@@ -50,7 +49,7 @@ $(function() {
     div.setAttribute("data-start-x", selections["start-x"]);
     div.setAttribute("data-start-y", selections["start-y"]);
     div.setAttribute("data-end-x",  selections["end-x"]);
-    div.setAttribute("end-end-y", selections["end-y"]);
+    div.setAttribute("data-end-y", selections["end-y"]);
    
     div.style.top = `${selections["start-y"]}px`;
     div.style.left = `${selections["start-x"]}px`;
@@ -60,16 +59,29 @@ $(function() {
   });
 
   $("#start").on("click", function(event) {
-    let $shapes = $(".shape");
-    // stop all animations and cancel future animations
-    // return each shape to it's start-x and start-y positions
-    // start animations
-    //  - animate to left = end-x and top = end-y
-    //  - duration = 1000
+    let $shapes = $(".shapes");
+    
+    $shapes.stop(true);
+   
+    $shapes.each((_, element) => {
+      let $shape = $(element);
+      $shape.css({
+        top: $shape.data("startY"),
+        left: $shape.data("startX"),
+      });
+    });
+    
+    $shapes.each((_, element) => {
+      let $shape = $(element);
+      $shape.animate({
+        top: $shape.data("endY"),
+        left: $shape.data("endX"),
+      }, ANIMATE_DURATION);
+    });
   });
 
   $("#stop").on("click", function(event) {
-    let $shapes = $(".shape");
-    // stop all animations in their current location
+    let $shapes = $(".shapes");
+    $shapes.stop(true);
   });
 });
