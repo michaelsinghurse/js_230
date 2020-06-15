@@ -53,8 +53,10 @@ button:hover {
   margin: 25px 0;
 }
 
-#word div:first-child, #guesses div:first-child {
+#word h2, #guesses h2 {
   width: 170px;
+  font-size: 36px;
+  font-weight: normal;
 }
 
 .letter {
