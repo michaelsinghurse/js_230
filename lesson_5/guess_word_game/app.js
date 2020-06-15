@@ -98,16 +98,6 @@ $(function() {
     });
   }
 
-  function positionApples2() {
-    // animate falling apple if necessary
-    // - count the number of apples with "data-fallen" is "true" 
-    // - get the number of wrong guesses
-    // - if number of wrong is greater than count of fallen
-    //   - get teh first apple with "data-fallen" is "false"
-    //   - set "data-fallen" to "true"
-    //   - animate to top = 477 in 1000 duration
-  }
-  
   function renderWordLetters() {
     let $container = $("#word");
     $container.children().slice(1).remove();
