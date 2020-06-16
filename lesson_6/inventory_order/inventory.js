@@ -4,7 +4,7 @@ let inventory;
   inventory = {
     collection: [],
     lastId: 0,
-    template: "",
+    template: function() {},
 
     addItemToCollection() {
       this.lastId += 1;
@@ -26,8 +26,9 @@ let inventory;
     },
 
     cacheTemplate: function() {
-      let $template = $("#inventory_item").remove();
-      this.template = $template.html();
+      let $template = $("#inventory_item");
+      $template.remove();
+      this.template = Handlebars.compile($template.html());
     },
 
     deleteCollectionItem(itemId) {
@@ -37,8 +38,7 @@ let inventory;
 
     handleAddItem(event) {
       let id = this.addItemToCollection();
-      let template = this.template.replace(/ID/g, String(id));
-      $("#inventory").append(template);      
+      $("#inventory").append(this.template({ id }));      
     },
 
     handleDeleteItemClick(event) {
