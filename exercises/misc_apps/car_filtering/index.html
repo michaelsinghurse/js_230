@@ -9,7 +9,7 @@
   <script src="./app.js"></script>
 </head>
 <body>
-  <main>
+  <header>
     <h1>Car Gallery</h1>
     <form action="#" method="GET">
       <fieldset>
@@ -28,21 +28,28 @@
         <input type="submit" value="Filter" />
       </fieldset>
     </form>
+  </header>
+  <main>
     <ul></ul>
-    <script id="carsListTemplate" type="text/x-handlebars-template">
-      {{#each cars}}
-      {{> carTemplate}}
-      {{/each}}
-    </script>
-    <script id="carTemplate" type="text/x-handlebars-template">
-      <li>
-        <p>{{make}}</p>
-        <p>{{model}}</p>
-        <p>{{year}}</p>
-        <p>{{price}}</p>
-        <img src="{{image}}" />
-      </li>
-    </script>
   </main>
+  <script id="carsListTemplate" type="text/x-handlebars-template">
+    {{#each cars}}
+    {{> carTemplate}}
+    {{/each}}
+  </script>
+  <script id="carTemplate" type="text/x-handlebars-template">
+    <li>
+      <h2>{{make}} {{model}}</h2>
+      <p>Year:  {{year}}</p>
+      <p>Price: ${{price}}</p>
+      <img src="{{image}}" />
+    </li>
+  </script>
+  <script id="selectOptionsTemplate" type="text/x-handlebars-template">
+    <option value=''>---</option>
+    {{#each options}}
+      <option value={{.}}>{{.}}</option>
+    {{/each}}
+  </script>
 </body>
 </html>

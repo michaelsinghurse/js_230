@@ -13,14 +13,15 @@ body {
   padding: 20px 0px;
 }
 
-main {
+header, main {
   background-color: white;
   width: 800px;
   box-sizing: border-box;
   margin: 0 auto;
   padding: 15px;
-  min-height: 1000px;
 }
+
+main { min-height: 1000px; }
 
 h1 {
   text-align: center;
@@ -33,6 +34,10 @@ fieldset {
 
 label {
   margin-left: 10px;
+}
+
+select {
+  min-width: 70px;
 }
 
 input {
@@ -50,10 +55,6 @@ li {
   background-color: white;
   padding: 5px;
   margin: 10px 0;
-}
-
-li p:nth-child(4):before {
-  content: "$";
 }
 
 li img {

@@ -11,27 +11,38 @@ const cars = [
 let carDisplay = {
   bindListeners() {
     this.$form.on("submit", this.handleFormSubmit.bind(this));
+    this.$form.find("[name='make']").on(
+      "change",
+      this.handleMakeSelectionChange.bind(this));
   },
 
-  compileCarsTemplate() {
+  compileHtmlTemplates() {
+    let template = {};
+
+    let $optionsTemplate = $("#selectOptionsTemplate");
+    $optionsTemplate.remove();
+    template.selectOptions = Handlebars.compile($optionsTemplate.html());
+
+    let $listTemplate = $("#carsListTemplate");
+    $listTemplate.remove();
+    template.cars = Handlebars.compile($listTemplate.html());
+
     Handlebars.registerPartial("carTemplate", $("#carTemplate").html());
     $("#carTemplate").remove();
 
-    let $listTemplate = $("#carsListTemplate"); 
-    $listTemplate.remove(); 
-    return Handlebars.compile($listTemplate.html());
+    return template;
   },
 
   handleFormSubmit(event) {
     event.preventDefault();
-   
+
     let selections = this.$form
       .serializeArray()
       .filter(selection => selection.value !== "");
 
     let cars = this.cars.slice();
 
-    if (selections.length > 0) { 
+    if (selections.length > 0) {
       cars = cars.filter(car => {
         return selections.every(selection => {
           if (selection.name === "year" || selection.name === "price") {
@@ -45,42 +56,56 @@ let carDisplay = {
     this.renderCars(cars);
   },
 
+  handleMakeSelectionChange(event) {
+    let make = event.target.value;
+
+    let cars = this.cars.slice();
+
+    if (make) {
+      cars = cars.filter(car => car.make === make);
+    }
+
+    this.populateFormFilters(cars, false);
+  },
+
   init() {
     this.cars = cars;
     this.$carList = $("ul");
     this.$form = $("form");
-    this.populateFormFilters();
-    this.bindListeners();
-    this.carsTemplate = this.compileCarsTemplate(); 
+    this.htmlTemplates = this.compileHtmlTemplates();
+
+    this.populateFormFilters(this.cars);
     this.renderCars(this.cars);
+    this.bindListeners();
   },
-  
-  populateFormFilters() {
+
+  populateFormFilters(cars, includeMake = true) {
     let $selects = $("form select");
 
     $selects.each((_, element) => {
       let $select = $(element);
       let name = $select.attr("name");
 
-      let values = this.cars.reduce((array, car) => {
+      if (name === "make" && !includeMake) return;
+
+      $select.children().remove();
+
+      let values = cars.reduce((array, car) => {
         let value = car[name];
         if (!array.includes(value)) {
           array.push(value);
         }
         return array;
       }, []);
-      
+
       values = this.sortArray(values);
-      
-      $select.append("<option value=''>---</option>");
-      values.forEach(value => {
-        $select.append(`<option value=${value}>${value}</option>`);
-      });
+
+      $select.html(this.htmlTemplates.selectOptions({ options: values }));
     });
   },
 
   renderCars(cars) {
-    this.$carList.html(this.carsTemplate({ cars }));
+    this.$carList.html(this.htmlTemplates.cars({ cars }));
   },
 
   sortArray(array) {
