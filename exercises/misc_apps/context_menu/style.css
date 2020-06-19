@@ -3,11 +3,16 @@
   margin: 0;
 }
 
+html {
+  height: 100%;
+}
+
 body {
   background-color: red;
   padding-top: 15px;
   font-family: Helvetica, sans-serif;
   position: relative;
+  min-height: 100%;
 }
 
 main {
@@ -32,10 +37,6 @@ li {
   display: flex;
   justify-content: space-between;
   cursor: pointer;
-}
-
-li:hover {
-  background: linear-gradient(to right, #73FFA4, #54F08A);
 }
 
 #deleteConfirm {
@@ -72,13 +73,17 @@ li:hover {
   position: absolute;
   background-color: silver;
   z-index: 3;
+  border: 1px solid gray;
   border-radius: 3px;
 }
 
 #contextMenu div {
-  border-bottom: 1px solid gray;
   padding: 10px 15px;
   cursor: pointer;
+}
+
+#contextMenu div + div {
+  border-top: 1px solid gray;
 }
 
 #contextMenu div:hover {

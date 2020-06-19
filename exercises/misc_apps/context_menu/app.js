@@ -6,20 +6,44 @@ let todo_items = [
 ];
 
 let todoApp = {
-  addOverlay() {
-    let $overlay = $("<div id=overlay></div>");
-
-    $overlay.on("click", this.handleOverlayClick.bind(this));
-
-    $("body").append($overlay);
+  bindListeners() {
+    this.$todoList.on("contextmenu", "li", this.handleContextMenuClick.bind(this));
+    $("body").on("click", this.handleBodyClick.bind(this));
   },
-
-  bindTodoEvents() {
-    this.$todoList.on("contextmenu", "li", this.handleTodoClick.bind(this));
+  
+  handleBodyClick(event) {
+    this.removeContextMenu();
   },
 
   handleContextMenuClick(event) {
+    event.preventDefault();
+    
+    this.removeContextMenu();
 
+    let id = $(event.target).closest("li").attr("data-id");
+    let position = {
+      top: event.clientY,
+      left: event.clientX,
+    };
+    this.renderContextMenu(id, position);
+  },
+
+  handleContextMenuSelection(event) {
+    event.preventDefault();
+    
+    let $menuItem = $(event.target);
+    let id = $menuItem.parents("#contextMenu").attr("data-id");
+    let action = $menuItem.attr("data-menu-action");
+    
+    switch (action) {
+      case "details":
+        break;
+      case "edit":
+        break;
+      case "delete":
+        this.renderDeleteConfirmation(id);
+        break;
+    }
   },
 
   handleDeleteConfirmClick(event) {
@@ -47,21 +71,19 @@ let todoApp = {
     }
   },
 
-  handleTodoClick(event) {
-    event.preventDefault();
-    let id = $(event.target).closest("li").attr("data-id");
-    let position = {
-      top: event.clientY,
-      left: event.clientX,
-    };
-    this.renderContextMenu(id, position);
-  },
-
   init() {
     this.todos = todo_items;
     this.$todoList = $("ul");
+    this.$contextMenu = null;
     this.renderTodos();
-    this.bindTodoEvents();
+    this.bindListeners();
+  },
+  
+  removeContextMenu() {
+    if (this.$contextMenu) {
+      this.$contextMenu.remove();
+      this.$contextMenu = null;
+    }
   },
 
   removeOverlay() {
@@ -69,15 +91,15 @@ let todoApp = {
   },
 
   renderContextMenu(id, position) {
-    let $menu = $(`<div data-id=${id} id=contextMenu></div>`);
-    $menu.css(position);
-    $menu.append($("<div data-menu-action=details>Show Details</div>"));
-    $menu.append($("<div data-menu-action=edit>Edit Todo</div>"));
-    $menu.append($("<div data-menu-action=delete>Delete Todo</div>"));
+    this.$contextMenu = $(`<div data-id=${id} id=contextMenu></div>`);
+    this.$contextMenu.css(position);
+    this.$contextMenu.append($("<div data-menu-action=details>Show Details</div>"));
+    this.$contextMenu.append($("<div data-menu-action=edit>Edit Todo</div>"));
+    this.$contextMenu.append($("<div data-menu-action=delete>Delete Todo</div>"));
     
-    $menu.on("click", this.handleContextMenuClick.bind(this));
+    this.$contextMenu.on("click", this.handleContextMenuSelection.bind(this));
 
-    $("body").append($menu);
+    $("body").append(this.$contextMenu);
   },
 
   renderDeleteConfirmation(id) {
@@ -90,7 +112,15 @@ let todoApp = {
     $("main").append($div);
     $div.on("click", "button", this.handleDeleteConfirmClick.bind(this));  
 
-    this.addOverlay();
+    this.renderOverlay();
+  },
+
+  renderOverlay() {
+    let $overlay = $("<div id=overlay></div>");
+
+    $overlay.on("click", this.handleOverlayClick.bind(this));
+
+    $("body").append($overlay);
   },
 
   renderTodos() {
