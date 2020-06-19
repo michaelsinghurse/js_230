@@ -1,0 +1,62 @@
+*, body {
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  height: 100%;
+}
+
+body {
+  font-family: Helvetica, Arial, sans-serif;
+  background-color: black;
+  padding: 20px 0px;
+}
+
+main {
+  background-color: white;
+  width: 800px;
+  box-sizing: border-box;
+  margin: 0 auto;
+  padding: 15px;
+  min-height: 1000px;
+}
+
+h1 {
+  text-align: center;
+  margin: 10px 0;
+}
+
+fieldset {
+  border: none;
+}
+
+label {
+  margin-left: 10px;
+}
+
+input {
+  margin-left: 10px;
+  padding: 3px 5px;
+}
+
+ul {
+  list-style-type: none;
+}
+
+li {
+  border: 1px solid gray;
+  border-radius: 2px;
+  background-color: white;
+  padding: 5px;
+  margin: 10px 0;
+}
+
+li p:nth-child(4):before {
+  content: "$";
+}
+
+li img {
+  margin-top: 5px;
+  width: 100%;
+}

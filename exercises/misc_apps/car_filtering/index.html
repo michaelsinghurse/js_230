@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en-US">
+<head>
+  <title>Car Filter</title>
+  <meta charset="UTF-8" />
+  <link rel="stylesheet" href="./style.css" />
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.7.6/handlebars.min.js"></script>
+  <script src="./app.js"></script>
+</head>
+<body>
+  <main>
+    <h1>Car Gallery</h1>
+    <form action="#" method="GET">
+      <fieldset>
+        <label for="make">Make</label>
+        <select name="make"></select>
+
+        <label for="model">Model</label>
+        <select name="model"></select>
+
+        <label for="year">Year</label>
+        <select name="year"></select>
+
+        <label for="price">Price</label>
+        <select name="price"></select>
+
+        <input type="submit" value="Filter" />
+      </fieldset>
+    </form>
+    <ul></ul>
+    <script id="carsListTemplate" type="text/x-handlebars-template">
+      {{#each cars}}
+      {{> carTemplate}}
+      {{/each}}
+    </script>
+    <script id="carTemplate" type="text/x-handlebars-template">
+      <li>
+        <p>{{make}}</p>
+        <p>{{model}}</p>
+        <p>{{year}}</p>
+        <p>{{price}}</p>
+        <img src="{{image}}" />
+      </li>
+    </script>
+  </main>
+</body>
+</html>
