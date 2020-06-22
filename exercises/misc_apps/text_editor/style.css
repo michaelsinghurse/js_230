@@ -1,0 +1,38 @@
+*, body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: silver;
+}
+
+main {
+  width: 700px;
+  box-sizing: border-box;
+  margin: 0 auto;
+  padding: 30px 10px;
+}
+
+h1 {
+  text-align: center;
+  margin 80px;
+  color: blue;
+}
+
+#menu {
+  margin: 20px 0 10px;
+}
+
+#content {
+  width: 100%;
+  background-color: white;
+  height: 800px;
+  border: 5px solid gray;
+  border-radius: 5px;
+}
+
+button {
+  padding: 3px;
+  background-color: lightgray;
+}
