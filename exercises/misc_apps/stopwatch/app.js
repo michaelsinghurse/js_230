@@ -74,5 +74,5 @@ let stopwatch = {
 };
 
 document.addEventListener("DOMContentLoaded", _unusedEvent => {
-  stopwatch.init(359000);
+  stopwatch.init(0);
 });
