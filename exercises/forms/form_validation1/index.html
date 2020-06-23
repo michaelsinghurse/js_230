@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en-US">
+<head>
+  <title>Form Validation 1</title>
+  <meta charset="UTF-8" />
+  <link rel="stylesheet" href="./style.css" />
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="./app.js"></script>
+</head>
+<body>
+  <main>
+    <form action="#" method="post" novalidate>
+      <fieldset>
+        <h1>Sign Up Form</h1>
+        <dl>
+          <dt><label for="first_name">First Name</label></dt>
+          <dd>
+            <input type="text" name="first_name" id="first_name" 
+              pattern="[A-Za-z]+" required />
+            <span class="error"></span>
+          </dd>
+        
+          <dt><label for="last_name">Last Name</label></dt>
+          <dd>
+            <input type="text" name="last_name" id="last_name" 
+              pattern="[A-Za-z]+" required />
+            <span class="error"></span>
+          </dd>
+
+          <dt><label for="phone">Phone</label></dt>
+          <dd>
+            <input type="tel" name="phone" id="phone"   
+              pattern="\d{3}-\d{3}-\d{4}" placeholder="123-456-7890"/>
+            <span class="error"></span>
+          </dd>
+
+          <dt><label for="email">Email</label></dt>
+          <dd>
+            <input type="email" name="email" id="email" pattern=".+@.+" required />
+            <span class="error"></span>
+          </dd>
+          
+          <dt><label for="password">Password</label></dt>
+          <dd>
+            <input type="password" name="password" id="password" 
+              pattern="\S{10,}" required />
+            <span class="error"></span>
+          </dd>
+        </dl>
+        <input type="submit" value="Sign Up" />
+      </fieldset>
+    </form>
+  </main>
+</body>
+</html>
