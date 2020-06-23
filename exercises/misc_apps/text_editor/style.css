@@ -26,13 +26,35 @@ h1 {
 
 #content {
   width: 100%;
+  box-sizing: border-box;
+  padding: 8px;
   background-color: white;
   height: 800px;
+  font-size: 16px;
   border: 5px solid gray;
   border-radius: 5px;
+  overflow: scroll;
 }
 
 button {
   padding: 3px;
   background-color: lightgray;
+  margin-right: 5px;
+  border: none;
+  box-shadow: 2px 2px 2px black;
+  cursor: pointer;
+}
+
+button.enabled {
+  transform: translateX(2px) translateY(2px);
+  background-color: white;
+  box-shadow: none;
+}
+
+button:active {
+  outline: none;
+}
+
+button:focus {
+  outline: none;
 }
