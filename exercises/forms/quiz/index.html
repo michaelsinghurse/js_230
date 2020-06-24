@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en-US">
+<head>
+  <title>Home Preferences</title>
+  <meta charset="UTF-8" />
+  <link rel="stylesheet" href="./style.css" />
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.7.6/handlebars.min.js"></script>
+  <script src="./app.js"></script>
+</head>
+<body>
+  <main>
+    <h1>Home Preferences Quiz</h1>
+    <form action="#" method="post">
+
+      <input type="submit" value="Submit" />
+      <input type="button" value="Reset" />
+    </form>
+  </main>
+
+  <script id="questionsCollection" type="text/x-handlebars-template">
+    {{#each questions}}
+    {{> question}}
+    {{/each}}
+  </script>
+
+  <script id="questionPartial" type="text/x-handlebars-template">
+    <fieldset id="question{{id}}">
+      <legend>{{questionNumber @index}}. {{question}}</legend>
+
+      <label>
+        <input type="radio" name="answer{{id}}" value="{{options.[0]}}" />
+        {{options.[0]}}
+      </label>
+
+      <label>
+        <input type="radio" name="answer{{id}}" value="{{options.[1]}}" />
+        {{options.[1]}}
+      </label>
+
+      <label>
+        <input type="radio" name="answer{{id}}" value="{{options.[2]}}" />
+        {{options.[2]}}
+      </label>
+
+      <label>
+        <input type="radio" name="answer{{id}}" value="{{options.[3]}}" />
+        {{options.[3]}}
+      </label>
+      <p id="result{{id}}"></p>
+    </fieldset>
+  </script>
+
+</body>
+</html>
