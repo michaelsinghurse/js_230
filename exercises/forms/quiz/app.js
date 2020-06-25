@@ -36,6 +36,14 @@ let Quiz = {
     this.$form.on("submit", this.handleFormSubmit.bind(this));
     this.$reset.on("click", this.handleFormReset.bind(this));
   },
+  
+  clearResults() {
+    $("p[id^='result']").each((_, element) => {
+      let $element = $(element);
+      $element.text("");
+      $element.removeClass("right wrong missing");
+    });
+  },
 
   compileQuestionsTemplate() {
     Handlebars.registerPartial("question", $("#questionPartial").html());        
@@ -44,40 +52,43 @@ let Quiz = {
   },
   
   gradeQuizAnswers(formData) {
-    let results = [];
+    return this.questions.map(question => {
+      let id = question.id;
+      let answer = this.answers[id];
+      let choice = formData.get("answer" + id) || "";
+      
+      let isCorrect = answer === choice;
+      let isMissing = choice === "";
+      let message;
 
-    for (let key of formData.keys()) {
-      let id = key.replace("answer", "");
-      let correctAnswer = this.answers[id];
-      let isCorrect = formData.get(key) === correctAnswer;
-      let message = isCorrect
-        ? "Correct Answer"
-        : "Sorry the answer is: " + correctAnswer;
-    
-      results.push({
+      if (isCorrect) {
+        message = "Correct Answer";
+      } else if (isMissing) {
+        message = "No response? The answer is: " + answer;
+      } else {
+        message = "Incorrect. The answer is: " + answer;
+      }
+
+      return {
         id,
         isCorrect,
+        isMissing,
         message,
-      });
-    }
-
-    return results;
+      }
+    });
   },
 
   handleFormReset(_unusedEvent) {
     this.$form.get(0).reset();
-    // enable submit button
     this.$submit.removeAttr("disabled");
-    // set text within each p#result to empty string
-
+    this.clearResults();
   },
 
   handleFormSubmit(event) {
     event.preventDefault();
-    // disable form submit button
-    this.$submit.attr("disabled", "true");
 
-    // display results message beneath each radio button set
+    this.$submit.attr("disabled", "true");
+    
     let results = this.gradeQuizAnswers(new FormData(this.$form.get(0)));
     this.renderResults(results);
   },
@@ -97,8 +108,25 @@ let Quiz = {
   },
 
   renderResults(results) {
-    console.log(results);
+    results.forEach(result => {
+      let $msg = $(`#result${result.id}`);
+      $msg.text(result.message);
+      
+      let resultClass;
+
+      if (result.isCorrect) {
+        resultClass = "right";
+      } else if (result.isMissing) {
+        resultClass = "missing";
+      } else {
+        resultClass = "wrong";
+      }
+
+      $msg.addClass(resultClass);
+    });
   },
 };
 
 $(Quiz.init.bind(Quiz));
+
+

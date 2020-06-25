@@ -46,16 +46,21 @@ input[type="submit"]:disabled {
   cursor: default;
 }
 
+p.right, p.wrong, p.missing {
+  border: 2px dashed black;
+  margin-top: 15px;
+}
+
 p.right {
-  border: 1px dashed green;
+  background-color: green;
 }
 
 p.wrong {
-  border: 1px dashed red;
+  background-color: red;
 }
 
 p.missing {
-  border: 1px dashed yellow;
+  background-color: yellow;
 }
 
 
