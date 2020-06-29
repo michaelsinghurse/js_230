@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Contacts Manager</title>
+  <link rel="stylesheet" href="/stylesheets/style.css" />
+  <script src="/javascripts/jquery.js"></script>
+  <script src="/javascripts/handlebars.js"></script>
+</head>
+<body>
+
+  <header>
+    <h1>Contacts Manager</h1>
+    <form action="#" method="get">
+      <fieldset>
+        <label for="search_box">Search by name:</label>
+        <input id="search_box" name="search_box" type="text" pattern="[\w ]+" />
+        <p>Search by tag:</p>
+        <div id="tags"></div>
+      </fieldset>
+    </form>
+  </header>
+
+  <main>
+    <h2>My Contacts</h2>
+    <button id="add_contact" type="button">Add Contact</button>
+    <div id="contacts_container"></div>
+    <div id="modal"></div>
+    <div id="contacts_forms"></div>
+  </main>
+  
+  <script id="tagsTemplate" type="text/x-handlebars-template">
+    <ul>
+    {{#each tags}}
+    <li>
+      <label>
+        <input type="checkbox" name="tag" value="{{.}}" />
+        {{.}} 
+      </label>
+    </li>
+    {{/each}}
+    </ul>
+  </script>
+
+  <script id="contactsTemplate" type="text/x-handlebars-template">
+    <ul>
+    {{#each contacts}}
+      <li data-id="{{id}}">
+        <h3>{{full_name}}</h3>
+        <dl>
+          <dt>Phone Number:</dt>
+          <dd>{{phone_number}}</dd>
+          <dt>Email:</dt>
+          <dd>{{email}}</dd>
+          <dt>Tags:</dt>
+          <dd>{{tags}}</dd>
+        </dl>
+        <button type="button">Edit</button>
+        <button type="button">Delete</button>
+      </li>
+    {{/each}}
+    </ul>
+  </script>
+
+  <script id="addContactTemplate" type="text/x-handlebars-template" >
+    <form id="addContact" action="#" method="post">
+      <fieldset>
+        <legend>Create Contact</legend>
+        <label for="full_name">Name:</label>
+        <input type="text" id="full_name" name="full_name" required />
+        <label for="phone">Phone Number:</label>
+        <input type="phone" id="phone" name="phone" />
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" />
+        <label for="tags">Tags:</label>
+        <input type="text" id="tags" name="tags" />
+        <input type="submit" value="Submit" />
+        <input type="button" value="Cancel" />
+      </fieldset>
+    </form>
+  </script>
+
+  <script id="editContactTemplate" type="text/x-handlebars-template" >
+    <form id="editContact" action="#" method="post">
+      <fieldset>
+        <legend>Edit Contact</legend>
+        <input type="hidden" id="id" name="id" value="{{id}}" />
+        <label for="full_name">Name:</label>
+        <input type="text" id="full_name" name="full_name" value="{{full_name}}"/>
+        <label for="phone_number">Phone Number:</label>
+        <input type="phone" id="phone_number" name="phone_number" value="{{phone_number}}" />
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" value="{{email}}" />
+        <label for="tags">Tags:</label>
+        <input type="text" id="tags" name="tags" value="{{tags}}" />
+        <input type="submit" value="Submit" />
+        <input type="button" value="Cancel" />
+      </fieldset>
+    </form>
+  </script>
+
+  <script id="deleteContactTemplate" type="text/x-handlebars-template">
+    <form id="deleteContact" action="#" method="post">
+      <fieldset>
+        <legend>Delete Contact</legend>
+        <input type="hidden" id="id" name="id" value="{{id}}" />
+        <p>Delete {{full_name}}?</p>
+        <input type="button" value="No" />
+        <input type="submit" value="Yes" />
+      </fieldset>
+    </form>
+  </script>
+
+  <script src="/javascripts/app.js"></script>
+</body>
+</html>
+
+
+
+
+
+
+
