@@ -11,9 +11,10 @@ header h1 {
   margin: 10px 0;
 }
 
-header fieldset {
+header #filters {
   padding: 5px;
   font-size: 18px;
+  border: 1px solid black;
 }
 
 header input[type='text'] {

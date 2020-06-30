@@ -76,6 +76,10 @@ let Server = {
 let Contacts = (function() {
   let contacts;
   
+  function makeCopy(object) {
+    return JSON.parse(JSON.stringify(object));
+  }
+
   function removeContact(id) {
     let index = contacts.findIndex(contact => contact.id === Number(id));
     if (index === -1) {
@@ -102,7 +106,7 @@ let Contacts = (function() {
         Server.addContact(contact)
         .then(response => {
           contacts.push(response);
-          resolve(response);
+          resolve(makeCopy(response));
         })
         .catch(error => reject(error));
       });
@@ -124,7 +128,7 @@ let Contacts = (function() {
         Server.editContact(contact)
         .then(response => {
           replaceContact(response); 
-          resolve(response);
+          resolve(makeCopy(response));
         })
         .catch(error => reject(error));
       });
@@ -133,14 +137,14 @@ let Contacts = (function() {
     getAllContacts() {
       return new Promise((resolve, reject) => {
         if (contacts) {
-          resolve(contacts);
+          resolve(contacts.slice());
           return;
         }
       
         Server.getContacts()
         .then(response => {
           contacts = response;
-          resolve(contacts);
+          resolve(makeCopy(contacts));
         })
         .catch(error => resolve(error));
       });
@@ -162,11 +166,32 @@ let Contacts = (function() {
     },
 
     getContactById(id) {
-      return contacts.find(contact => contact.id === Number(id));
+      let contact = contacts.find(contact => contact.id === Number(id));
+      return makeCopy(contact);
     },
     
-    getContactsByTags(tags) {
+    getContactsThatStartWith(text) {
+      let regex = new RegExp(`^${text}`, "gi");
 
+      let matches = contacts.filter(contact => {
+        let names = contact.full_name.split(" ");
+        return names.some(name => regex.test(name)); 
+      });
+
+      return makeCopy(matches);
+    },
+
+    getContactsWithTags(pTags) {
+      if (pTags.length) {
+        let matches = contacts.filter(contact => {
+          let tags = contact.tags.split(",");
+          return tags.some(tag => pTags.includes(tag));
+        });
+
+        return makeCopy(matches);
+      } else {
+        return makeCopy(contacts);
+      }
     },
   };
 })();
@@ -177,6 +202,8 @@ let App = {
   deleteContactTemplate: null,
 
   bindListeners() {
+    $("#search_box").on("input", this.handleSearchBoxInput.bind(this));
+    $("#tags").on("input", "[name='tag']", this.handleTagClick.bind(this));
     $("#add_contact").on("click", this.handleAddContactButton.bind(this));
     $("#contacts_container").on(
       "click", 
@@ -285,7 +312,25 @@ let App = {
     })
     .catch(error => console.log(error));
   },
+
+  handleSearchBoxInput(event) {
+    let text = event.target.value;
+    let contacts = Contacts.getContactsThatStartWith(text);
+    this.renderPage(contacts);
+  },
   
+  handleTagClick(event) {
+    $("#search_box").val("");
+
+    let tags = [];
+    $("#tags").find("input:checked").each((_, element) => {
+      tags.push(element.value);
+    });
+    
+    let contacts = Contacts.getContactsWithTags(tags);
+    this.renderPage(contacts, false);
+  },
+
   hideModal() {
     $("#modal").toggle(false);
   },
@@ -306,8 +351,10 @@ let App = {
     $("#modal_forms").toggle(false).html("");
   },
 
-  renderPage(contacts) {
-    this.renderTagsFilter(Contacts.getAllUniqueTags());
+  renderPage(contacts, resetTags = true) {
+    if (resetTags) {
+      this.renderTagsFilter(Contacts.getAllUniqueTags());
+    }
     this.renderContacts(contacts);
   },
 
