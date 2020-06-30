@@ -16,7 +16,8 @@
     <form action="#" method="get">
       <fieldset>
         <label for="search_box">Search by name:</label>
-        <input id="search_box" name="search_box" type="text" pattern="[\w ]+" />
+        <input id="search_box" name="search_box" type="text" 
+          placeholder="Name begins with..." />
         <p>Search by tag:</p>
         <div id="tags"></div>
       </fieldset>
@@ -25,10 +26,10 @@
 
   <main>
     <h2>My Contacts</h2>
-    <button id="add_contact" type="button">Add Contact</button>
+    <button id="add_contact" type="button">+ New</button>
     <div id="contacts_container"></div>
     <div id="modal"></div>
-    <div id="contacts_forms"></div>
+    <div id="modal_forms"></div>
   </main>
   
   <script id="tagsTemplate" type="text/x-handlebars-template">
@@ -51,14 +52,14 @@
         <h3>{{full_name}}</h3>
         <dl>
           <dt>Phone Number:</dt>
-          <dd>{{phone_number}}</dd>
+          <dd>{{valueOrFiller phone_number}}</dd>
           <dt>Email:</dt>
-          <dd>{{email}}</dd>
+          <dd>{{valueOrFiller email}}</dd>
           <dt>Tags:</dt>
-          <dd>{{tags}}</dd>
+          <dd>{{valueOrFiller tags}}</dd>
         </dl>
-        <button type="button">Edit</button>
-        <button type="button">Delete</button>
+        <button data-action="edit" type="button">Edit</button>
+        <button data-action="delete" type="button">Delete</button>
       </li>
     {{/each}}
     </ul>
@@ -68,14 +69,20 @@
     <form id="addContact" action="#" method="post">
       <fieldset>
         <legend>Create Contact</legend>
-        <label for="full_name">Name:</label>
-        <input type="text" id="full_name" name="full_name" required />
-        <label for="phone">Phone Number:</label>
-        <input type="phone" id="phone" name="phone" />
-        <label for="email">Email:</label>
-        <input type="email" id="email" name="email" />
-        <label for="tags">Tags:</label>
-        <input type="text" id="tags" name="tags" />
+        <dl>
+          <dt><label for="full_name">Name:</label></dt>
+          <dd>
+            <input type="text" id="full_name" name="full_name" required />
+          </dd>
+          <dt><label for="phone_number">Phone Number:</label></dt>
+          <dd>
+            <input type="phone" id="phone_number" name="phone_number" />
+          </dd>
+          <dt><label for="email">Email:</label></dt>
+          <dd><input type="email" id="email" name="email" /></dd>
+          <dt><label for="tags">Tags:</label></dt>
+          <dd><input type="text" id="tags" name="tags" /></dd>
+        </dl>
         <input type="submit" value="Submit" />
         <input type="button" value="Cancel" />
       </fieldset>
@@ -87,14 +94,24 @@
       <fieldset>
         <legend>Edit Contact</legend>
         <input type="hidden" id="id" name="id" value="{{id}}" />
-        <label for="full_name">Name:</label>
-        <input type="text" id="full_name" name="full_name" value="{{full_name}}"/>
-        <label for="phone_number">Phone Number:</label>
-        <input type="phone" id="phone_number" name="phone_number" value="{{phone_number}}" />
-        <label for="email">Email:</label>
-        <input type="email" id="email" name="email" value="{{email}}" />
-        <label for="tags">Tags:</label>
-        <input type="text" id="tags" name="tags" value="{{tags}}" />
+        <dl>
+          <dt><label for="full_name">Name:</label></dt>
+          <dd>
+            <input type="text" id="full_name" name="full_name" value="{{full_name}}" />
+          </dd>
+          <dt><label for="phone_number">Phone Number:</label></dt>
+          <dd>
+            <input type="phone" id="phone_number" name="phone_number" value="{{phone_number}}" />
+          </dd>
+          <dt><label for="email">Email:</label></dt>
+          <dd>
+            <input type="email" id="email" name="email" value="{{email}}" />
+          </dd>
+          <dt><label for="tags">Tags:</label></dt>
+          <dd>
+            <input type="text" id="tags" name="tags" value="{{tags}}" />
+          </dd>
+        </dl>
         <input type="submit" value="Submit" />
         <input type="button" value="Cancel" />
       </fieldset>
@@ -106,9 +123,9 @@
       <fieldset>
         <legend>Delete Contact</legend>
         <input type="hidden" id="id" name="id" value="{{id}}" />
-        <p>Delete {{full_name}}?</p>
-        <input type="button" value="No" />
+        <p>Delete contact {{full_name}}?</p>
         <input type="submit" value="Yes" />
+        <input type="button" value="No" />
       </fieldset>
     </form>
   </script>

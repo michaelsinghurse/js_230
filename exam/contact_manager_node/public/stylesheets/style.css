@@ -1,3 +1,76 @@
+*, body {
+  margin: 0;
+  padding: 0;
+}
+
+main, header {
+  padding: 10px;
+}
+
+header h1 {
+  margin: 10px 0;
+}
+
+header fieldset {
+  padding: 5px;
+  font-size: 18px;
+}
+
+header input[type='text'] {
+  padding: 3px;
+  font-size: 15px;
+}
+
+header p {
+  margin-top: 15px;
+}
+
+#tags ul {
+  list-style-type: none;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: start;
+}
+
+#tags li {
+  margin: 5px 15px 5px 0;
+}
+
+main h2, button#add_contact {
+  display: inline-block;
+}
+
+button#add_contact {
+  margin-left: 20px;
+  background-color: green;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 5px 8px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+#contacts_container ul {
+  list-style-type: none;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+}
+
+#contacts_container li {
+  border: 1px solid gray;
+  min-width: 250px;
+  box-sizing: border-box;
+  margin: 10px 20px 10px 0;
+  padding: 5px;
+}
+
+#contacts_container button {
+  width: 60px;
+  padding: 3px;
+}
+
 #modal {
   display: none;
   min-height: 100%;
@@ -10,12 +83,48 @@
   z-index: 1;
 }
 
-#contacts_forms {
+#modal_forms {
+  display: none;
   background-color: white;
   position: fixed;
-  width: 500px;
+  width: 450px;
+  box-sizing: border-box;
   top: 50px;
   left: 50%;
-  margin-left: -250px;
+  margin-left: -225px;
   z-index: 2;
+  padding: 10px;
+  border-radius: 3px;
+}
+
+#modal_forms fieldset {
+  padding: 5px;
+  border-radius: 3px;
+}
+
+#modal_forms dd {
+  margin: 5px 0 10px 0;
+}
+
+#modal_forms input {
+  padding: 3px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+#modal_forms input[type='submit'],
+#modal_forms input[type='button'] {
+  width: 60px;
+  padding: 3px;
+}
+
+#deleteContact p {
+  margin: 10px 0 20px 0;
+}
+
+@media screen and (min-width: 961px) {
+  header, main {
+    width: 961px;
+    margin: 0 auto;
+  }
 }
