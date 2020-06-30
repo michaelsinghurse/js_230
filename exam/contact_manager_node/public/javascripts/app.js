@@ -6,7 +6,7 @@ let Server = {
       xhr.setRequestHeader("Content-Type", "application/json");
       xhr.responseType = "json";
 
-      xhr.addEventListener("load", event => {
+      xhr.addEventListener("load", _event => {
         if (xhr.status === 201) {
           resolve(xhr.response);
         } else {
@@ -17,13 +17,13 @@ let Server = {
       xhr.send(JSON.stringify(contact));
     });
   },
-  
+
   deleteContact(id) {
     return new Promise((resolve, reject) => {
       let xhr = new XMLHttpRequest();
       xhr.open("DELETE", "/api/contacts/" + id);
 
-      xhr.addEventListener("load", event => {
+      xhr.addEventListener("load", _event => {
         if (xhr.status === 204) {
           resolve();
         } else {
@@ -42,7 +42,7 @@ let Server = {
       xhr.setRequestHeader("Content-Type", "application/json");
       xhr.responseType = "json";
 
-      xhr.addEventListener("load", event => {
+      xhr.addEventListener("load", _event => {
         if (xhr.status === 201) {
           resolve(xhr.response);
         } else {
@@ -51,7 +51,7 @@ let Server = {
       });
 
       xhr.send(JSON.stringify(contact));
-    });  
+    });
   },
 
   getContacts() {
@@ -60,8 +60,8 @@ let Server = {
       xhr.open("GET", "/api/contacts");
       xhr.responseType = "json";
 
-      xhr.addEventListener("load", event => {
-        if (xhr.status === 200) { 
+      xhr.addEventListener("load", _event => {
+        if (xhr.status === 200) {
           resolve(xhr.response);
         } else {
           reject("Error with request!");
@@ -75,7 +75,7 @@ let Server = {
 
 let Contacts = (function() {
   let contacts;
-  
+
   function makeCopy(object) {
     return JSON.parse(JSON.stringify(object));
   }
@@ -104,33 +104,33 @@ let Contacts = (function() {
     addContact(contact) {
       return new Promise((resolve, reject) => {
         Server.addContact(contact)
-        .then(response => {
-          contacts.push(response);
-          resolve(makeCopy(response));
-        })
-        .catch(error => reject(error));
+          .then(response => {
+            contacts.push(response);
+            resolve(makeCopy(response));
+          })
+          .catch(error => reject(error));
       });
     },
-    
+
     deleteContact(id) {
       return new Promise((resolve, reject) => {
         Server.deleteContact(id)
-        .then(() => {
-          removeContact(id); 
-          resolve();
-        })
-        .catch(error => reject(error));
+          .then(() => {
+            removeContact(id);
+            resolve();
+          })
+          .catch(error => reject(error));
       });
     },
 
     editContact(contact) {
       return new Promise((resolve, reject) => {
         Server.editContact(contact)
-        .then(response => {
-          replaceContact(response); 
-          resolve(makeCopy(response));
-        })
-        .catch(error => reject(error));
+          .then(response => {
+            replaceContact(response);
+            resolve(makeCopy(response));
+          })
+          .catch(error => reject(error));
       });
     },
 
@@ -140,13 +140,13 @@ let Contacts = (function() {
           resolve(contacts.slice());
           return;
         }
-      
+
         Server.getContacts()
-        .then(response => {
-          contacts = response;
-          resolve(makeCopy(contacts));
-        })
-        .catch(error => resolve(error));
+          .then(response => {
+            contacts = response;
+            resolve(makeCopy(contacts));
+          })
+          .catch(error => reject(error));
       });
     },
 
@@ -169,13 +169,13 @@ let Contacts = (function() {
       let contact = contacts.find(contact => contact.id === Number(id));
       return makeCopy(contact);
     },
-    
+
     getContactsThatStartWith(text) {
       let regex = new RegExp(`^${text}`, "gi");
 
       let matches = contacts.filter(contact => {
         let names = contact.full_name.split(" ");
-        return names.some(name => regex.test(name)); 
+        return names.some(name => regex.test(name));
       });
 
       return makeCopy(matches);
@@ -206,8 +206,8 @@ let App = {
     $("#tags").on("input", "[name='tag']", this.handleTagClick.bind(this));
     $("#add_contact").on("click", this.handleAddContactButton.bind(this));
     $("#contacts_container").on(
-      "click", 
-      "button[data-action='edit']", 
+      "click",
+      "button[data-action='edit']",
       this.handleEditContactButtonClick.bind(this));
     $("#contacts_container").on(
       "click",
@@ -215,7 +215,7 @@ let App = {
       this.handleDeleteContactButtonClick.bind(this));
     $("#modal").on("click", this.removeModalAndForm.bind(this));
   },
-  
+
   compileHtmlTemplates() {
     this.addContactTemplate = Handlebars.compile($("#addContactTemplate").html());
     this.editContactTemplate = Handlebars.compile($("#editContactTemplate").html());
@@ -233,13 +233,13 @@ let App = {
   handleAddContactButton(event) {
     event.preventDefault();
 
-    this.displayModal(); 
-    
+    this.displayModal();
+
     $("#modal_forms").toggle(true).html(this.addContactTemplate());
     $("#addContact").on("submit", this.handleAddContactSubmit.bind(this));
     $("#addContact").on("click", "input[type='button']", this.removeModalAndForm.bind(this));
   },
-  
+
   handleAddContactSubmit(event) {
     event.preventDefault();
 
@@ -248,20 +248,20 @@ let App = {
     $(event.target).serializeArray().forEach(input => {
       contact[input.name] = input.value;
     });
-    
+
     Contacts.addContact(contact)
-    .then(_ => {
-      return Contacts.getAllContacts();
-    })
-    .then(contacts => {
-      this.removeModalAndForm();
-      this.renderPage(contacts);
-    })
-    .catch(error => console.log(error));
+      .then(_ => {
+        return Contacts.getAllContacts();
+      })
+      .then(contacts => {
+        this.removeModalAndForm();
+        this.renderPage(contacts);
+      })
+      .catch(error => console.log(error));
   },
-  
+
   handleDeleteContactButtonClick(event) {
-    let id = $(event.target).closest("li").attr("data-id"); 
+    let id = $(event.target).closest("li").attr("data-id");
     let contact = Contacts.getContactById(id);
 
     this.displayModal();
@@ -270,25 +270,25 @@ let App = {
     $("#deleteContact").on("submit", this.handleDeleteContactSubmit.bind(this));
     $("#deleteContact").on("click", "[type='button']", this.removeModalAndForm.bind(this));
   },
-  
+
   handleDeleteContactSubmit(event) {
     event.preventDefault();
     let id = $(event.target).find("[name='id']").val();
-    
+
     Contacts.deleteContact(id)
-    .then(() => Contacts.getAllContacts())
-    .then(contacts => {
-      this.removeModalAndForm();
-      this.renderPage(contacts);
-    })
-    .catch(error => console.log(error));
+      .then(() => Contacts.getAllContacts())
+      .then(contacts => {
+        this.removeModalAndForm();
+        this.renderPage(contacts);
+      })
+      .catch(error => console.log(error));
   },
 
   handleEditContactButtonClick(event) {
-    let id = $(event.target).closest("li").attr("data-id"); 
-    let contact = Contacts.getContactById(id)
+    let id = $(event.target).closest("li").attr("data-id");
+    let contact = Contacts.getContactById(id);
 
-    this.displayModal(); 
+    this.displayModal();
 
     $("#modal_forms").toggle(true).html(this.editContactTemplate(contact));
     $("#editContact").on("submit", this.handleEditContactSubmit.bind(this));
@@ -303,14 +303,14 @@ let App = {
     $(event.target).serializeArray().forEach(input => {
       contact[input.name] = input.value;
     });
-    
+
     Contacts.editContact(contact)
-    .then(_ => Contacts.getAllContacts())
-    .then(contacts => {
-      this.removeModalAndForm();
-      this.renderPage(contacts);
-    })
-    .catch(error => console.log(error));
+      .then(_ => Contacts.getAllContacts())
+      .then(contacts => {
+        this.removeModalAndForm();
+        this.renderPage(contacts);
+      })
+      .catch(error => console.log(error));
   },
 
   handleSearchBoxInput(event) {
@@ -318,15 +318,15 @@ let App = {
     let contacts = Contacts.getContactsThatStartWith(text);
     this.renderPage(contacts);
   },
-  
-  handleTagClick(event) {
+
+  handleTagClick(_event) {
     $("#search_box").val("");
 
     let tags = [];
     $("#tags").find("input:checked").each((_, element) => {
       tags.push(element.value);
     });
-    
+
     let contacts = Contacts.getContactsWithTags(tags);
     this.renderPage(contacts, false);
   },
@@ -339,13 +339,13 @@ let App = {
     this.compileHtmlTemplates();
 
     Contacts.getAllContacts()
-    .then(contacts => {
-      this.renderPage(contacts);
-    });
+      .then(contacts => {
+        this.renderPage(contacts);
+      });
 
     this.bindListeners();
   },
-  
+
   removeModalAndForm() {
     this.hideModal();
     $("#modal_forms").toggle(false).html("");
