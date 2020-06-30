@@ -198,8 +198,10 @@ let Contacts = (function() {
 
 let App = {
   addContactTemplate: null,
-  editContactTemplate: null,
+  contactsTemplate: null,
   deleteContactTemplate: null,
+  editContactTemplate: null,
+  tagsTemplate: null,
 
   bindListeners() {
     $("#search_box").on("input", this.handleSearchBoxInput.bind(this));
@@ -218,8 +220,10 @@ let App = {
 
   compileHtmlTemplates() {
     this.addContactTemplate = Handlebars.compile($("#addContactTemplate").html());
-    this.editContactTemplate = Handlebars.compile($("#editContactTemplate").html());
+    this.contactsTemplate = Handlebars.compile($("#contactsTemplate").html());
     this.deleteContactTemplate = Handlebars.compile($("#deleteContactTemplate").html());
+    this.editContactTemplate = Handlebars.compile($("#editContactTemplate").html());
+    this.tagsTemplate = Handlebars.compile($("#tagsTemplate").html());
 
     Handlebars.registerHelper("valueOrFiller", value => {
       return value || "---";
@@ -359,13 +363,11 @@ let App = {
   },
 
   renderContacts(contacts) {
-    let contactsTemplate = Handlebars.compile($("#contactsTemplate").html());
-    $("#contacts_container").html(contactsTemplate({ contacts }));
+    $("#contacts_container").html(this.contactsTemplate({ contacts }));
   },
 
   renderTagsFilter(tags) {
-    let tagsTemplate = Handlebars.compile($("#tagsTemplate").html());
-    $("#tags").html(tagsTemplate({ tags }));
+    $("#tags").html(this.tagsTemplate({ tags }));
   },
 };
 
