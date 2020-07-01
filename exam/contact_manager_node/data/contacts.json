@@ -1,51 +1,23 @@
 [
   {
-    "id": 1,
-    "full_name": "Naveed Fida",
-    "email": "nf@example.com",
-    "phone_number": "12345678901",
-    "tags": "work,friend"
-  },
-  {
-    "id": 2,
-    "full_name": "Victor Reyes",
-    "email": "vpr@example.com",
-    "phone_number": "09876543210",
-    "tags": "work,friend"
-  },
-  {
-    "id": 3,
-    "full_name": "Pete Hanson",
-    "email": "ph@example.com",
-    "phone_number": "54321098761",
-    "tags": ""
-  },
-  {
-    "full_name": "Zofia Singhurse",
-    "phone_number": "920-382-2211",
-    "email": "zsing@gmail.com",
-    "tags": "daughter,girl,lively",
-    "id": 7
-  },
-  {
     "full_name": "Ursula Singhurse",
     "phone_number": "860-307-7355",
     "email": "ursulasinghurse@gmail.com",
     "tags": "wife,best friend,mother",
-    "id": 9
+    "id": 1
   },
   {
     "full_name": "Nathanael Singhurse",
-    "phone_number": "920-317-8956",
+    "phone_number": "920-235-2656",
     "email": "nsinghurse@gmail.com",
-    "tags": "boy,baby,cute",
-    "id": 10
+    "tags": "son,baby,boy",
+    "id": 2
   },
   {
-    "full_name": "Bernadette Singhurse",
-    "phone_number": "920-381-8392",
-    "email": "bea@gmail.com",
-    "tags": "girl,daughter,sweet",
-    "id": 13
+    "full_name": "Zofia Singhurse",
+    "phone_number": "",
+    "email": "",
+    "tags": "",
+    "id": 4
   }
 ]

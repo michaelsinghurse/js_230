@@ -184,8 +184,9 @@ let Contacts = (function() {
     getContactsWithTags(pTags) {
       if (pTags.length) {
         let matches = contacts.filter(contact => {
-          let tags = contact.tags.split(",");
-          return tags.some(tag => pTags.includes(tag));
+          let tags = contact.tags || "";
+          let tagsArr = tags.split(",");
+          return tagsArr.some(tag => pTags.includes(tag));
         });
 
         return makeCopy(matches);
