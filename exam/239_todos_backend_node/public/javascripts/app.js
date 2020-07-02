@@ -83,6 +83,11 @@ let Todos = (function() {
       todo["due_date"] = "No Due Date";
     }
   }
+  
+  function addTodo(todo) {
+    todos.push(todo);
+    todos = sortTodosByDate(todos);
+  }
 
   function makeCopy(object) {
     return JSON.parse(JSON.stringify(object));
@@ -96,15 +101,54 @@ let Todos = (function() {
   function replaceTodo(updatedTodo) {
     let index = todos.findIndex(todo => todo.id === updatedTodo.id);
     todos.splice(index, 1, updatedTodo);
+    todos = sortTodosByDate(todos);
   }
   
+  function sortTodosByCompletion(todos) {
+    return todos.sort((todo1, todo2) => {
+      if (!todo1.completed && todo2.completed) {
+        return -1;
+      } else if (todo1.completed && !todo2.completed) {
+        return 1;
+      } else {
+        return 0;
+      }
+    });
+  }
+
+  function sortTodosByDate(todos) {
+    // sort order: no due date before due date, year ascending, month 
+    // ascending, title ASCIIbetical.
+    return todos.sort((todo1, todo2) => {
+      if ((!todo1.month && !todo1.year) && (todo2.month && todo2.year)) {
+        return -1;
+      } else if ((todo1.month && todo1.year) && (!todo2.month && !todo2.year)) {
+        return 1;
+      } else if (Number(todo1.year) < Number(todo2.year)) {
+        return -1;
+      } else if (Number(todo1.year) > Number(todo2.year)) {
+        return 1;
+      } else if (Number(todo1.month) < Number(todo2.month)) {
+        return -1;
+      } else if (Number(todo1.month) > Number(todo2.month)) {
+        return 1;
+      } else if (todo1.title < todo2.title) {
+        return -1;
+      } else if (todo1.title > todo2.title) {
+        return 1;
+      } else {
+        return 0;
+      }
+    });
+  }
+
   return {
     addTodo(todo) {
       return new Promise((resolve, reject) => {
         Client.addTodo(todo)
         .then(newTodo => {
           addDueDate(newTodo);
-          todos.push(newTodo);
+          addTodo(newTodo);
           resolve();
         })
         .catch(error => reject(error));
@@ -139,7 +183,7 @@ let Todos = (function() {
     },
     
     getAllTodosByDate() {
-      return this.getAllTodos().reduce((object, todo) => {
+     return  this.getAllTodos().reduce((object, todo) => {
         let due_date = todo.due_date;
         object[due_date] = object[due_date] || [];
         object[due_date].push(makeCopy(todo));
@@ -165,15 +209,18 @@ let Todos = (function() {
     },
 
     getTodosByCompletionAndDate(done, due_date) {
+      let todos;
       if (!done && !due_date) {
-        return this.getAllTodos();
+        todos = this.getAllTodos();
       } else if (!done && due_date) {
-        return this.getAllTodosByDate().due_date;
+        todos = this.getAllTodosByDate().due_date;
       } else if (done && !due_date) {
-        return this.getDoneTodos();
+        todos = this.getDoneTodos();
       } else {
-        return this.getDoneTodosByDate().due_date;
+        todos = this.getDoneTodosByDate().due_date;
       }
+
+      return sortTodosByCompletion(todos);
     },
 
     init() {
@@ -181,7 +228,7 @@ let Todos = (function() {
         Client.getAllTodos()
         .then(todosArr => {
           todosArr.forEach(todo => addDueDate(todo));
-          todos = todosArr;
+          todos = sortTodosByDate(todosArr);
           resolve();
         })
         .catch(error => reject(error));
