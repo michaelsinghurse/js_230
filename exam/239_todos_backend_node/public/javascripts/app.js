@@ -97,7 +97,7 @@ let Todos = (function() {
     let index = todos.findIndex(todo => todo.id === updatedTodo.id);
     todos.splice(index, 1, updatedTodo);
   }
-
+  
   return {
     addTodo(todo) {
       return new Promise((resolve, reject) => {
@@ -138,18 +138,6 @@ let Todos = (function() {
       return makeCopy(todos);
     },
     
-    getTodosByCompletionAndDate(done, due_date) {
-      if (!done && !due_date) {
-        return this.getAllTodos();
-      } else if (!done && due_date) {
-        return this.getAllTodosByDate().due_date;
-      } else if (done && !due_date) {
-        return this.getDoneTodos();
-      } else {
-        return this.getDoneTodosByDate().due_date;
-      }
-    },
-
     getAllTodosByDate() {
       return this.getAllTodos().reduce((object, todo) => {
         let due_date = todo.due_date;
@@ -172,8 +160,20 @@ let Todos = (function() {
       }, {});
     },
       
-    getTodoById(id) {
+    getTodo(id) {
       return makeCopy(todos.find(todo => todo.id === Number(id)));
+    },
+
+    getTodosByCompletionAndDate(done, due_date) {
+      if (!done && !due_date) {
+        return this.getAllTodos();
+      } else if (!done && due_date) {
+        return this.getAllTodosByDate().due_date;
+      } else if (done && !due_date) {
+        return this.getDoneTodos();
+      } else {
+        return this.getDoneTodosByDate().due_date;
+      }
     },
 
     init() {
@@ -188,9 +188,19 @@ let Todos = (function() {
       });
     },
 
-    markDoneById(id) {
+    markDone(id) {
       return new Promise((resolve, reject) => {
         let todo = { id, completed: true };
+        this.editTodo(todo)
+        .then(() => resolve())
+        .catch(error => reject(error));
+      });
+    },
+
+    toggleDone(id) {
+      return new Promise((resolve, reject) => {
+        let isDone = todos.find(todo => todo.id === Number(id)).completed;
+        let todo = { id, completed: !isDone };
         this.editTodo(todo)
         .then(() => resolve())
         .catch(error => reject(error));
@@ -293,7 +303,7 @@ let App = {
     }
 
     let id = $form.attr("data-id");
-    Todos.markDoneById(id)
+    Todos.markDone(id)
     .then(() => {
       this.renderPage();
       this.bindListeners();
@@ -343,13 +353,14 @@ let App = {
   handleTodoClick(event) {
     let id = $(event.target).closest("tr").attr("data-id");
     
-    
-
-
-
-
-
-
+    Todos.toggleDone(id)
+    .then(() => {
+      this.renderPage();
+      this.bindListeners();
+    })
+    .catch(error => {
+      console.log(error);
+    });
   },
 
   handleTodoLabelClick(event) {
@@ -357,7 +368,7 @@ let App = {
     event.stopPropagation(); // otherwise triggers td.list_item click
 
     let id = $(event.target).closest("tr").attr("data-id");
-    let todo = Todos.getTodoById(id);
+    let todo = Todos.getTodo(id);
     
     this.displayModalLayer();
 
