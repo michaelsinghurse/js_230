@@ -210,14 +210,15 @@ let Todos = (function() {
 
     getTodosByCompletionAndDate(done, due_date) {
       let todos;
+
       if (!done && !due_date) {
         todos = this.getAllTodos();
       } else if (!done && due_date) {
-        todos = this.getAllTodosByDate().due_date;
+        todos = this.getAllTodosByDate()[due_date] || [];
       } else if (done && !due_date) {
         todos = this.getDoneTodos();
       } else {
-        todos = this.getDoneTodosByDate().due_date;
+        todos = this.getDoneTodosByDate()[due_date] || [];
       }
 
       return sortTodosByCompletion(todos);
@@ -259,7 +260,31 @@ let Todos = (function() {
 let App = {
   templates: {},
   
+  addActiveClass(todoGroup) {
+    let done      = todoGroup.done;
+    let due_date  = todoGroup.due_date;
+    let $element;
+
+    if (!done) {
+      if (!due_date) {
+        $element = $("#all_header");
+      } else {
+        $element = $(`#all_lists dl[data-title='${due_date}']`);
+      }
+    } else {
+      if (!due_date) {
+        $element = $("#all_done_header"); 
+      } else {
+        $element = $(`#completed_lists dl[data-title='${due_date}']`);
+      }
+    }
+    
+    $element.addClass("active");
+  },
+
   bindListeners() {
+    $("#all_todos, #completed_todos").on("click", this.handleSidebarClick.bind(this));
+    $("#sidebar article dl").on("click", this.handleSidebarClick.bind(this));
     $("label[for='new_item']").on("click", this.handleAddTodoClick.bind(this));
     $("#modal_layer").on("click", this.hideModalLayerAndForm.bind(this));
     $("#form_modal form").on("submit", this.handleFormModalSubmit.bind(this));
@@ -317,6 +342,31 @@ let App = {
       }
     });
   },
+  
+  getCurrentTodoGroup() {
+    let $active = $("#sidebar .active");
+    return this.getTodoGroup($active.get(0));
+  },
+
+  getTodoGroup(element) {
+    let todoGroup = {};
+    let $element = $(element);
+    let title = $element.attr("data-title");
+
+    if (title === "All Todos") {
+      todoGroup.done = false;
+      todoGroup.due_date = "";
+    } else if (title === "Completed") {
+      todoGroup.done = true;
+      todoGroup.due_date = "";
+    } else {
+      let id = $element.closest("article").attr("id");
+      todoGroup.done = id === "completed_lists"; 
+      todoGroup.due_date = title;
+    }
+
+    return todoGroup;
+  },
 
   handleAddTodoClick(_event) {
     this.displayModalLayer(); 
@@ -329,11 +379,11 @@ let App = {
     event.stopPropagation();
 
     let id = $(event.target).closest("tr").attr("data-id");
+    let todoGroup = this.getCurrentTodoGroup();
     
     Todos.deleteTodo(id)
     .then(() => {
-      this.renderPage();
-      this.bindListeners();
+      this.renderPage(todoGroup);
     })
     .catch(error => {
       console.log(error);
@@ -348,12 +398,13 @@ let App = {
       alert("You must first save the todo before marking it complete.");
       return;
     }
-
+    
     let id = $form.attr("data-id");
+    let todoGroup = this.getCurrentTodoGroup();
+
     Todos.markDone(id)
     .then(() => {
-      this.renderPage();
-      this.bindListeners();
+      this.renderPage(todoGroup);
     })
     .catch(error => {
       console.log(error);
@@ -373,23 +424,26 @@ let App = {
 
     // this.hideModalLayerAndForm(); This removes the id, which I need in the if
     // statment below.
+    let todoGroup;
 
     if ($form.attr("data-action") === "add") {
+      todoGroup = { done: false, due_date: "" };
+
       Todos.addTodo(values)
       .then(() => {
-        this.renderPage();
-        this.bindListeners();
+        this.renderPage(todoGroup);
       })
       .catch(error => {
         console.log(error);
       });
     } else if ($form.attr("data-action") === "edit") {
+      todoGroup = this.getCurrentTodoGroup();
+
       values.id = $form.attr("data-id");
 
       Todos.editTodo(values)
       .then(() => {
-        this.renderPage();
-        this.bindListeners();
+        this.renderPage(todoGroup);
       })
       .catch(error => {
         console.log(error);
@@ -397,13 +451,27 @@ let App = {
     }
   },
   
+  handleSidebarClick(event) {
+    let cTarget = event.currentTarget;
+    let element;
+
+    if (cTarget.id === "all_todos" || cTarget.id === "completed_todos") {
+      element = cTarget.querySelector("header"); 
+    } else {
+      element = cTarget;
+    }
+
+    let todoGroup = this.getTodoGroup(element);
+    this.renderPage(todoGroup);
+  },
+
   handleTodoClick(event) {
     let id = $(event.target).closest("tr").attr("data-id");
-    
+    let todoGroup = this.getCurrentTodoGroup();
+
     Todos.toggleDone(id)
     .then(() => {
-      this.renderPage();
-      this.bindListeners();
+      this.renderPage(todoGroup);
     })
     .catch(error => {
       console.log(error);
@@ -455,23 +523,41 @@ let App = {
   
   init() {
     this.compileHtmlTemplates();
+    
+    let todoGroup = { done: false, due_date: "" };
 
     Todos.init()
     .then(() => {
-      this.renderPage();
-      this.bindListeners();
+      this.renderPage(todoGroup);
     })
     .catch(error => {
       console.log(error);
     });
   },
+  
+  makeActiveClass(element) {
+    let $currentActive = $("#sidebar .active");
+    if ($currentActive.length) {
+      $currentActive.removeClass("active");
+    }
 
-  renderPage(done = false, due_date = "") {
-    let todos              = Todos.getAllTodos();
-    let done_todos         = Todos.getDoneTodos();
-    let todos_by_date      = Todos.getAllTodosByDate();
-    let done_todos_by_date = Todos.getDoneTodosByDate();
-    let selected           = Todos.getTodosByCompletionAndDate(done, due_date);
+    $(element).addClass("active");
+  },
+  
+  renderPage(todoGroup) {
+    this.insertHtml(todoGroup);
+    this.bindListeners();
+    this.addActiveClass(todoGroup);
+  },
+
+  insertHtml(todoGroup) {
+    let done                = todoGroup.done;
+    let due_date            = todoGroup.due_date;
+    let todos               = Todos.getAllTodos();
+    let done_todos          = Todos.getDoneTodos();
+    let todos_by_date       = Todos.getAllTodosByDate();
+    let done_todos_by_date  = Todos.getDoneTodosByDate();
+    let selected            = Todos.getTodosByCompletionAndDate(done, due_date);
     
     let current_section = {};
     if (done) {
