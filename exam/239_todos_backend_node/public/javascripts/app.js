@@ -186,7 +186,7 @@ let Todos = (function() {
       return  this.getAllTodos().reduce((object, todo) => {
         let dueDate = todo.due_date;
         object[dueDate] = object[dueDate] || [];
-        object[dueDate].push(makeCopy(todo));
+        object[dueDate].push(todo);
         return object;
       }, {});
     },
@@ -199,7 +199,7 @@ let Todos = (function() {
       return this.getDoneTodos().reduce((object, todo) => {
         let dueDate = todo.due_date;
         object[dueDate] = object[dueDate] || [];
-        object[dueDate].push(makeCopy(todo));
+        object[dueDate].push(todo);
         return object;
       }, {});
     },
