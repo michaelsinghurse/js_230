@@ -533,21 +533,6 @@ let App = {
     });
   },
   
-  makeActiveClass(element) {
-    let $currentActive = $("#sidebar .active");
-    if ($currentActive.length) {
-      $currentActive.removeClass("active");
-    }
-
-    $(element).addClass("active");
-  },
-  
-  renderPage(todoGroup) {
-    this.insertHtml(todoGroup);
-    this.bindListeners();
-    this.addActiveClass(todoGroup);
-  },
-
   insertHtml(todoGroup) {
     let done                = todoGroup.done;
     let due_date            = todoGroup.due_date;
@@ -573,6 +558,21 @@ let App = {
       selected, 
       current_section,
     }));
+  },
+
+  makeActiveClass(element) {
+    let $currentActive = $("#sidebar .active");
+    if ($currentActive.length) {
+      $currentActive.removeClass("active");
+    }
+
+    $(element).addClass("active");
+  },
+  
+  renderPage(todoGroup) {
+    this.insertHtml(todoGroup);
+    this.bindListeners();
+    this.addActiveClass(todoGroup);
   },
 
   serializeArrayToObject(array) {
