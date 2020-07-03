@@ -417,7 +417,7 @@ let App = {
     let values = this.serializeArrayToObject($form.serializeArray());
     this.formatFormValuesInPlace(values); 
     
-    if (values.title.length <= 3) {
+    if (values.title.length < 3) {
       alert("The title of the todo must be at least 3 characters long.");
       return;
     }
@@ -586,14 +586,5 @@ let App = {
 };
 
 $(App.init.bind(App));
-
-
-
-
-
-
-
-
-
 
 
