@@ -416,14 +416,12 @@ let App = {
     let $form = $(event.target);
     let values = this.serializeArrayToObject($form.serializeArray());
     this.formatFormValuesInPlace(values); 
-    
+
     if (values.title.length < 3) {
       alert("The title of the todo must be at least 3 characters long.");
       return;
     }
 
-    // this.hideModalLayerAndForm(); This removes the id, which I need in the if
-    // statment below.
     let todoGroup;
 
     if ($form.attr("data-action") === "add") {
